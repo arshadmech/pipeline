@@ -9,6 +9,7 @@ resources:
     type: github
     endpoint: arshadmech
     name: arshadmech/javacode
+    trigger: master
   
 trigger:
 - master
