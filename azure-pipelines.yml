@@ -21,32 +21,30 @@ steps:
 - checkout: javacode
 
 - task: Maven@4
-  inputs:
-    mavenPomFile: 'pom.xml'
-    mavenOptions: '-Xmx3072m'
-    javaHomeOption: 'JDKVersion'
-    jdkVersionOption: '1.8'
-    jdkArchitectureOption: 'x64'
-    publishJUnitResults: true
-    testResultsFiles: '**/TEST-*.xml'
-    goals: 'package'
-
-
-- task: CopyFiles@2
-  displayName: 'Copy Files to artifact staging directory'
-  inputs:
-    SourceFolder: '$(System.DefaultWorkingDirectory)'
-    Contents: '**/target/*.?(war|jar)'
-    TargetFolder: $(Build.ArtifactStagingDirectory)
-- upload: $(Build.ArtifactStagingDirectory)
-  artifact: drop
-
-- task: S3Upload@1
-  inputs:
-    sourceFolder: '$(Build.ArtifactStagingDirectory)/webapp/target/'
-    contentType: 
-    awsCredentials: 'newkeys'
-    regionName: 'ap-south-1'
-    bucketName: 'qa-weekly-backups'
-    globExpressions: '*.war'
-    targetFolder: 'demo'
+         inputs:
+          mavenPomFile: 'pom.xml'
+          publishJUnitResults: true
+          testResultsFiles: '**/surefire-reports/TEST-*.xml'
+          javaHomeOption: 'JDKVersion'
+          mavenVersionOption: 'Default'
+          mavenAuthenticateFeed: false
+          effectivePomSkip: false
+          sonarQubeRunAnalysis: false
+       - task: CopyFiles@2
+         inputs:
+           SourceFolder: '$(system.defaultworkingdirectory)'
+           Contents: '**/*.war'
+           TargetFolder: '$(build.artifactstagingdirectory)'
+       - task: PublishBuildArtifacts@1
+         inputs:
+           PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+           ArtifactName: 'drop'
+           publishLocation: Container
+           
+       - task: S3Upload@1
+         inputs:
+           awsCredentials: 'ovaledge s3'
+           regionName: 'ap-south-1'
+           bucketName: 'qa-weekly-backups'
+           sourceFolder: '$(Build.ArtifactStagingDirectory)/webapp/target'
+           globExpressions: '*.war'
