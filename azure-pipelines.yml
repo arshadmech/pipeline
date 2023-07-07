@@ -21,30 +21,31 @@ steps:
 - checkout: javacode
 
 - task: Maven@4
-         inputs:
-          mavenPomFile: 'pom.xml'
-          publishJUnitResults: true
-          testResultsFiles: '**/surefire-reports/TEST-*.xml'
-          javaHomeOption: 'JDKVersion'
-          mavenVersionOption: 'Default'
-          mavenAuthenticateFeed: false
-          effectivePomSkip: false
-          sonarQubeRunAnalysis: false
-       - task: CopyFiles@2
-         inputs:
-           SourceFolder: '$(system.defaultworkingdirectory)'
-           Contents: '**/*.war'
-           TargetFolder: '$(build.artifactstagingdirectory)'
-       - task: PublishBuildArtifacts@1
-         inputs:
-           PathtoPublish: '$(Build.ArtifactStagingDirectory)'
-           ArtifactName: 'drop'
-           publishLocation: Container
-           
-       - task: S3Upload@1
-         inputs:
-           awsCredentials: 'ovaledge s3'
-           regionName: 'ap-south-1'
-           bucketName: 'qa-weekly-backups'
-           sourceFolder: '$(Build.ArtifactStagingDirectory)/webapp/target'
-           globExpressions: '*.war'
+  inputs:
+    mavenPomFile: 'pom.xml'
+    publishJUnitResults: true
+    testResultsFiles: '**/surefire-reports/TEST-*.xml'
+    javaHomeOption: 'JDKVersion'
+    mavenVersionOption: 'Default'
+    mavenAuthenticateFeed: false
+    effectivePomSkip: false
+    sonarQubeRunAnalysis: false
+  
+- task: CopyFiles@2
+  inputs:
+    SourceFolder: '$(system.defaultworkingdirectory)'
+    Contents: '**'
+    TargetFolder: '(build.artifactstagingdirectory)'
+- task: PublishBuildArtifacts@1
+  inputs:
+    PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+    ArtifactName: 'drop'
+    publishLocation: 'Container'
+ 
+- task: S3Upload@1
+  inputs:
+    awsCredentials: 'ovaledge s3'
+    regionName: 'ap-south-1'
+    bucketName: 'qa-weekly-backups'
+    sourceFolder: '$(Build.ArtifactStagingDirectory)/webapp/target'
+    globExpressions: '**'
