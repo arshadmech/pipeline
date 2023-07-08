@@ -37,7 +37,7 @@ steps:
   inputs:
     SourceFolder: '$(system.defaultworkingdirectory)'
     Contents: '**'
-    TargetFolder: '(build.artifactstagingdirectory)'
+    TargetFolder: '/home/vsts/work/1/a/javacode/webapp/target'
 - task: PublishBuildArtifacts@1
   inputs:
     PathtoPublish: '$(build.artifactstagingdirectory)/javacode/webapp/target'
