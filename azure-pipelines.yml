@@ -40,7 +40,7 @@ steps:
     TargetFolder: '(build.artifactstagingdirectory)'
 - task: PublishBuildArtifacts@1
   inputs:
-    PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+    PathtoPublish: '$(build.artifactstagingdirectory)/javacode/.git/FETCH_HEAD'
     ArtifactName: 'drop'
     publishLocation: 'Container'
  
@@ -49,5 +49,5 @@ steps:
     awsCredentials: 'ovaledge s3'
     regionName: 'ap-south-1'
     bucketName: 'qa-weekly-backups'
-    sourceFolder: '$(Build.ArtifactStagingDirectory)/webapp/target'
+    sourceFolder: '$(Build.ArtifactStagingDirectory)/javacode/.git/FETCH_HEAD'
     globExpressions: '**'
