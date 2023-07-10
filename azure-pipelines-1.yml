@@ -18,10 +18,16 @@ trigger:
 
 pool:
   vmImage: ubuntu-latest
+  jobs:
+   - job: Test
+     timeoutInMinutes: 100 # how long to run the job before automatically cancelling
+     cancelTimeoutInMinutes: 2 # how much time to give 'run always even if cancelled tasks' before stopping them
+
 
 steps:
 - checkout: self
 - checkout: oasis_repo
+    
 - task: Maven@4
   inputs:
     mavenPomFile: '/home/vsts/work/1/s/oasis_repo'
