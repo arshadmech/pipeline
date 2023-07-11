@@ -24,7 +24,7 @@ steps:
 
 - task: Maven@4
   inputs:
-    mavenPomFile: '/home/vsts/work/1/s/javacode'
+    mavenPomFile: '/home/vsts/work/1/s/javacode/pom.xml'
     publishJUnitResults: true
     testResultsFiles: '**/surefire-reports/TEST-*.xml'
     javaHomeOption: 'JDKVersion'
@@ -36,7 +36,7 @@ steps:
 - task: CopyFiles@2
   inputs:
     SourceFolder: '$(system.defaultworkingdirectory)'
-    Contents: '*.war'
+    Contents: '**'
     TargetFolder: '/home/vsts/work/1/a/javacode/webapp/target'
 - task: PublishBuildArtifacts@1
   inputs:
