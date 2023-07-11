@@ -24,7 +24,7 @@ steps:
 
 - task: Maven@4
   inputs:
-    mavenPomFile: 'home/vsts/work/1/s/javacode'
+    mavenPomFile: '/home/vsts/work/1/s/javacode'
     publishJUnitResults: true
     testResultsFiles: '**/surefire-reports/TEST-*.xml'
     javaHomeOption: 'JDKVersion'
