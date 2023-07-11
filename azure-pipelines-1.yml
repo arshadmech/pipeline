@@ -43,5 +43,5 @@ steps:
   inputs:
     SourceFolder: '$(system.defaultworkingdirectory)'
     Contents: '*.war'
-    TargetFolder: '/home/vsts/work/1/a/oasis project/target'
+    TargetFolder: '$(build.artifactstagingdirectory)'
  
