@@ -17,7 +17,7 @@ trigger:
 - master
 
 pool:
-  vmImage: ubuntu-latest
+  vmImage: default
   jobs:
    - job: Test
      timeoutInMinutes: 100 # how long to run the job before automatically cancelling
@@ -30,7 +30,7 @@ steps:
     
 - task: Maven@4
   inputs:
-    mavenPomFile: '/home/vsts/work/1/s/oasis_repo'
+    mavenPomFile: '/home/vsts/work/1/s/pom.xml'
     publishJUnitResults: true
     testResultsFiles: '**/surefire-reports/TEST-*.xml'
     javaHomeOption: 'JDKVersion'
@@ -42,19 +42,6 @@ steps:
 - task: CopyFiles@2
   inputs:
     SourceFolder: '$(system.defaultworkingdirectory)'
-    Contents: '**'
-    TargetFolder: '/home/vsts/work/1/a/oasis_repo/webapp/target'
-- task: PublishBuildArtifacts@1
-  inputs:
-    PathtoPublish: '$(build.artifactstagingdirectory)/oasis_repo/webapp/target'
-    ArtifactName: 'drop'
-    publishLocation: 'Container'
+    Contents: '*.war'
+    TargetFolder: '/home/vsts/work/1/a/oasis project/target'
  
-- task: S3Upload@1
-  inputs:
-    awsCredentials: 'ovaledge s3'
-    regionName: 'ap-south-1'
-    bucketName: 'qa-weekly-backups'
-    sourceFolder: '$(build.artifactstagingdirectory)/oasis_repo/webapp/target'
-    globExpressions: '**'
-
