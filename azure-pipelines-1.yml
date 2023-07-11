@@ -1,0 +1,47 @@
+# Starter pipeline
+# Start with a minimal pipeline that you can customize to build and deploy your code.
+# Add steps that build, run tests, deploy, and more:
+# https://aka.ms/yaml
+
+resources:
+  repositories:
+  - repository: oasis_repo # The name used to reference this repository in the checkout step
+    type: bitbucket
+    endpoint: Bitbucket - kavyagv
+    name: ovaledgeinc/oasis_repo
+    trigger: 
+     - refs/heads/bug/RL6-20421
+
+  
+trigger:
+- master
+
+pool:
+  vmImage: 'ovaledge'
+  jobs:
+   - job: Test
+     timeoutInMinutes: 100 # how long to run the job before automatically cancelling
+     cancelTimeoutInMinutes: 2 # how much time to give 'run always even if cancelled tasks' before stopping them
+
+
+steps:
+- checkout: self
+- checkout: oasis_repo
+    
+- task: Maven@4
+  inputs:
+    mavenPomFile: '/home/vsts/work/1/s/pom.xml'
+    publishJUnitResults: true
+    testResultsFiles: '**/surefire-reports/TEST-*.xml'
+    javaHomeOption: 'JDKVersion'
+    mavenVersionOption: 'Default'
+    mavenAuthenticateFeed: false
+    effectivePomSkip: false
+    sonarQubeRunAnalysis: false
+  
+- task: CopyFiles@2
+  inputs:
+    SourceFolder: '$(system.defaultworkingdirectory)'
+    Contents: '*.war'
+    TargetFolder: '$(build.artifactstagingdirectory)'
+ 
