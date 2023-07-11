@@ -19,7 +19,7 @@ stages:
       steps:
        - task: Maven@4
          inputs:
-          mavenPomFile: 'pom.xml'
+          mavenPomFile: '/home/vsts/work/1/s/javacode/pom.xml'
           publishJUnitResults: true
           testResultsFiles: '**/surefire-reports/TEST-*.xml'
           javaHomeOption: 'JDKVersion'
@@ -29,12 +29,12 @@ stages:
           sonarQubeRunAnalysis: false
        - task: CopyFiles@2
          inputs:
-           SourceFolder: '$(system.defaultworkingdirectory)'
-           Contents: '**/*.war'
-           TargetFolder: '$(build.artifactstagingdirectory)'
+           SourceFolder: '/home/vsts/work/1/s/javacode/webapp/target/'
+           Contents: '*.war'
+           TargetFolder: '/home/vsts/work/1/a/javacode/webapp/target'
        - task: PublishBuildArtifacts@1
          inputs:
-           PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+           PathtoPublish: '(build.artifactstagingdirectory)/javacode/webapp/target'
            ArtifactName: 'drop'
            
  - stage: Deploy
@@ -48,5 +48,5 @@ stages:
            awsCredentials: 'ovaledge s3'
            regionName: 'ap-south-1'
            bucketName: 'qa-weekly-backups'
-           sourceFolder: '$(System.DefaultWorkingDirectory)/_oval edge-Maven-CI (1)/drop/webapp/target'
+           sourceFolder: '$(build.artifactstagingdirectory)/javacode/webapp/target'
            globExpressions: '*.war'
