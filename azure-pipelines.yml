@@ -13,7 +13,7 @@ resources:
      - master
   
 trigger:
-- none
+- master
 
 
 parameters:
