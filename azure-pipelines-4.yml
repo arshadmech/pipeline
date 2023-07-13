@@ -1,0 +1,62 @@
+# Starter pipeline
+# Start with a minimal pipeline that you can customize to build and deploy your code.
+# Add steps that build, run tests, deploy, and more:
+# https://aka.ms/yaml
+
+resources:
+  repositories:
+  - repository: javacode # The name used to reference this repository in the checkout step
+    type: github
+    endpoint: arshadmech
+    name: arshadmech/javacode
+    trigger: 
+     - master
+  
+trigger:
+- master
+
+parameters:
+- name: image
+  displayName: Pool Image
+  type: string
+  default: ubuntu-latest
+  values:
+  - windows-latest
+  - ubuntu-latest
+  - macOS-latest
+  - ovaledge
+
+
+steps:
+- checkout: self
+- checkout: javacode
+
+- task: Maven@4
+  inputs:
+    mavenPomFile: '/home/vsts/work/1/s/javacode/pom.xml'
+    publishJUnitResults: true
+    testResultsFiles: '**/surefire-reports/TEST-*.xml'
+    javaHomeOption: 'JDKVersion'
+    mavenVersionOption: 'Default'
+    mavenAuthenticateFeed: false
+    effectivePomSkip: false
+    sonarQubeRunAnalysis: false
+  
+- task: CopyFiles@2
+  inputs:
+    SourceFolder: '$(system.defaultworkingdirectory)/javacode/webapp/target'
+    Contents: '*.war'
+    TargetFolder: '/home/vsts/work/1/a/javacode/webapp/target'
+- task: PublishBuildArtifacts@1
+  inputs:
+    PathtoPublish: '$(build.artifactstagingdirectory)/javacode/webapp/target'
+    ArtifactName: 'drop'
+    publishLocation: 'Container'
+ 
+- task: S3Upload@1
+  inputs:
+    awsCredentials: 'ovaledge s3'
+    regionName: 'ap-south-1'
+    bucketName: 'qa-weekly-backups'
+    sourceFolder: '$(build.artifactstagingdirectory)/javacode/webapp/target'
+    globExpressions: '**'
