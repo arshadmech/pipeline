@@ -60,3 +60,4 @@ steps:
     bucketName: 'qa-weekly-backups'
     sourceFolder: '$(build.artifactstagingdirectory)/javacode/webapp/target'
     globExpressions: '**'
+- script: echo 'deployed to qa-weekly-backups'
