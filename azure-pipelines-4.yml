@@ -19,7 +19,7 @@ parameters:
 - name: image
   displayName: Pool Image
   type: string
-  default: ubuntu-latest
+  default: ovaledge
   values:
   - windows-latest
   - ubuntu-latest
